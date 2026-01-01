@@ -185,7 +185,7 @@ Be generous with partial credit. If code shows understanding of the concept, giv
 # ============================================================================
 
 API_URL = "https://inference.do-ai.run/v1/chat/completions"
-MODEL_NAME = "llama3.3-70b-instruct"
+MODEL_NAME = "openai-gpt-oss-120b"
 
 
 def get_api_key():
