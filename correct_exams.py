@@ -114,50 +114,58 @@ You are a gentle and encouraging programming instructor grading a CSCI 101 intro
 
 ## EXAM SECTION: {section}
 
-## QUESTIONS AND POINT DISTRIBUTION:
-{questions}
-
 ## POINT DISTRIBUTION:
 {point_info}
 
-## STUDENT'S ANSWERS:
+================================================================================
+## QUESTION 1:
+================================================================================
+{q1_text}
 
-### Q1_a Code:
+### STUDENT'S ANSWER TO QUESTION 1 (Part A - the function):
 ```python
 {q1_a}
 ```
 
-### Q1_b Code:
+### STUDENT'S ANSWER TO QUESTION 1 (Part B - the script):
 ```python
 {q1_b}
 ```
 
-### Q2 Code:
+================================================================================
+## QUESTION 2:
+================================================================================
+{q2_text}
+
+### STUDENT'S ANSWER TO QUESTION 2:
 ```python
 {q2_a}
 ```
 
+================================================================================
 ## YOUR TASK:
-Grade each question with soft/lenient grading. For each question:
-1. Provide brief, constructive feedback (2-3 sentences max)
-2. List what the student did correctly
-3. Assign points generously for partial understanding
+================================================================================
+IMPORTANT: Grade each question based ONLY on the student's answer shown directly below that question.
+- For Q1: Look at the code under "STUDENT'S ANSWER TO QUESTION 1" and grade it against Question 1 requirements
+- For Q2: Look at the code under "STUDENT'S ANSWER TO QUESTION 2" and grade it against Question 2 requirements
 
-## RESPONSE FORMAT (respond ONLY with this JSON, no other text):
+DO NOT mix up the questions. Each answer must be graded against its own question.
+
+## RESPONSE FORMAT (respond ONLY with valid JSON, no other text):
 {{
     "Q1": {{
-        "feedback": "Your constructive feedback here",
+        "feedback": "Feedback about the student's Question 1 answer",
         "correct_parts": ["list", "of", "correct", "concepts"],
-        "points_earned": <number>,
+        "points_earned": <number between 0 and {q1_max}>,
         "max_points": {q1_max}
     }},
     "Q2": {{
-        "feedback": "Your constructive feedback here",
+        "feedback": "Feedback about the student's Question 2 answer",
         "correct_parts": ["list", "of", "correct", "concepts"],
-        "points_earned": <number>,
+        "points_earned": <number between 0 and {q2_max}>,
         "max_points": {q2_max}
     }},
-    "total_points": <number>,
+    "total_points": <sum of points_earned>,
     "max_total": {total_max},
     "overall_comment": "One encouraging sentence about their work"
 }}
@@ -220,7 +228,8 @@ def grade_student(api_key, section, q1_a, q1_b, q2_a):
 
     prompt = GRADING_PROMPT_TEMPLATE.format(
         section=section,
-        questions=f"### Question 1:\n{questions['Q1']}\n\n### Question 2:\n{questions['Q2']}",
+        q1_text=questions['Q1'],
+        q2_text=questions['Q2'],
         point_info=point_info,
         q1_a=q1_a or "(No answer provided)",
         q1_b=q1_b or "(No answer provided)",
