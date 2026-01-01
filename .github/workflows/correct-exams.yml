@@ -1,0 +1,74 @@
+name: Correct Exams
+
+on:
+  # Manual trigger with button in GitHub UI
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "yes" to confirm running the exam correction'
+        required: true
+        default: 'yes'
+
+  # Automatic trigger on push to main branch
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      # Only run when relevant files change
+      - 'CSCI 101 Lab Exam Submission Form (Responses).xlsx'
+      - 'correct_exams.py'
+      - 'requirements.txt'
+
+jobs:
+  correct-exams:
+    runs-on: ubuntu-latest
+
+    # Skip if manual trigger and not confirmed
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.confirm == 'yes'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Exam Correction Agent
+        env:
+          MODEL_ACCESS_KEY: ${{ secrets.MODEL_ACCESS_KEY }}
+        run: |
+          echo "Starting exam correction..."
+          python correct_exams.py
+          echo "Exam correction completed!"
+
+      - name: Upload Results as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: exam-results-${{ github.run_number }}
+          path: exam_results.xlsx
+          retention-days: 90
+
+      - name: Generate Summary
+        run: |
+          echo "## Exam Correction Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Run:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Results have been uploaded as an artifact. Download **exam-results-${{ github.run_number }}** from the Actions tab." >> $GITHUB_STEP_SUMMARY
