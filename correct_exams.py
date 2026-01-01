@@ -118,26 +118,33 @@ You are a gentle and encouraging programming instructor grading a CSCI 101 intro
 {point_info}
 
 ================================================================================
-## QUESTION 1:
+## THE EXAM QUESTIONS:
 ================================================================================
+
+### QUESTION 1:
 {q1_text}
 
-### STUDENT'S ANSWER TO QUESTION 1 (Part A - the function):
+### QUESTION 2:
+{q2_text}
+
+================================================================================
+## ALL OF THE STUDENT'S SUBMITTED CODE:
+================================================================================
+The student submitted code in three text boxes. Look at ALL of this code to find
+answers for both questions. The code may not be in the expected order - analyze
+the logic to determine which code attempts to answer which question.
+
+### Code Box 1:
 ```python
 {q1_a}
 ```
 
-### STUDENT'S ANSWER TO QUESTION 1 (Part B - the script):
+### Code Box 2:
 ```python
 {q1_b}
 ```
 
-================================================================================
-## QUESTION 2:
-================================================================================
-{q2_text}
-
-### STUDENT'S ANSWER TO QUESTION 2:
+### Code Box 3:
 ```python
 {q2_a}
 ```
@@ -145,22 +152,23 @@ You are a gentle and encouraging programming instructor grading a CSCI 101 intro
 ================================================================================
 ## YOUR TASK:
 ================================================================================
-IMPORTANT: Grade each question based ONLY on the student's answer shown directly below that question.
-- For Q1: Look at the code under "STUDENT'S ANSWER TO QUESTION 1" and grade it against Question 1 requirements
-- For Q2: Look at the code under "STUDENT'S ANSWER TO QUESTION 2" and grade it against Question 2 requirements
+1. Read ALL the code boxes above
+2. Determine which code is attempting to answer Question 1 (look for code that matches Q1 requirements)
+3. Determine which code is attempting to answer Question 2 (look for code that matches Q2 requirements)
+4. Grade each question based on the relevant code you identified
 
-DO NOT mix up the questions. Each answer must be graded against its own question.
+Be generous with partial credit. If code shows understanding of the concept, give points.
 
 ## RESPONSE FORMAT (respond ONLY with valid JSON, no other text):
 {{
     "Q1": {{
-        "feedback": "Feedback about the student's Question 1 answer",
+        "feedback": "Feedback about Question 1 - what the student did right/wrong",
         "correct_parts": ["list", "of", "correct", "concepts"],
         "points_earned": <number between 0 and {q1_max}>,
         "max_points": {q1_max}
     }},
     "Q2": {{
-        "feedback": "Feedback about the student's Question 2 answer",
+        "feedback": "Feedback about Question 2 - what the student did right/wrong",
         "correct_parts": ["list", "of", "correct", "concepts"],
         "points_earned": <number between 0 and {q2_max}>,
         "max_points": {q2_max}
