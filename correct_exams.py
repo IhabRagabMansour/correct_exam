@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Exam Correction Agent for CSCI 101 Lab Exam
-Uses DigitalOcean Gradient API (GPT-5) for soft grading
+Uses DigitalOcean Inference API (llama3.3-70b-instruct) for soft grading
 """
 
 import os
 import json
+import requests
 import pandas as pd
 from datetime import datetime
-from gradient import Gradient
 
 # ============================================================================
 # CONFIGURATION
@@ -165,18 +165,44 @@ Grade each question with soft/lenient grading. For each question:
 
 
 # ============================================================================
-# GRADIENT API CLIENT
+# DIGITALOCEAN INFERENCE API
 # ============================================================================
 
-def create_client():
-    """Create Gradient API client"""
+API_URL = "https://inference.do-ai.run/v1/chat/completions"
+MODEL_NAME = "llama3.3-70b-instruct"
+
+
+def get_api_key():
+    """Get API key from environment"""
     api_key = os.environ.get("MODEL_ACCESS_KEY")
     if not api_key:
         raise ValueError("MODEL_ACCESS_KEY environment variable not set")
-    return Gradient(model_access_key=api_key)
+    return api_key
 
 
-def grade_student(client, section, q1_a, q1_b, q2_a):
+def call_inference_api(api_key, messages, max_tokens=1500):
+    """Call DigitalOcean Inference API directly via HTTP"""
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+
+    payload = {
+        "model": MODEL_NAME,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": 0.3,  # Lower temperature for consistent grading
+    }
+
+    response = requests.post(API_URL, headers=headers, json=payload, timeout=120)
+
+    if response.status_code != 200:
+        raise Exception(f"API Error {response.status_code}: {response.text}")
+
+    return response.json()
+
+
+def grade_student(api_key, section, q1_a, q1_b, q2_a):
     """Grade a single student's exam using the AI"""
 
     questions = EXAM_QUESTIONS[section]
@@ -204,24 +230,20 @@ def grade_student(client, section, q1_a, q1_b, q2_a):
         total_max=total_max,
     )
 
-    try:
-        response = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a helpful programming instructor. Always respond with valid JSON only."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            model="openai-gpt-5",
-            max_tokens=1000,
-            temperature=0.3,  # Lower temperature for more consistent grading
-        )
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful programming instructor. Always respond with valid JSON only, no markdown formatting."
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
 
-        result_text = response.choices[0].message.content.strip()
+    try:
+        response_data = call_inference_api(api_key, messages)
+        result_text = response_data["choices"][0]["message"]["content"].strip()
 
         # Try to parse JSON from response
         # Handle case where response might have markdown code blocks
@@ -230,6 +252,7 @@ def grade_student(client, section, q1_a, q1_b, q2_a):
         elif "```" in result_text:
             result_text = result_text.split("```")[1].split("```")[0]
 
+        result_text = result_text.strip()
         result = json.loads(result_text)
         return result
 
@@ -279,11 +302,12 @@ def load_students(filepath):
 
 def process_all_students(df):
     """Process all students and return results"""
-    client = create_client()
+    api_key = get_api_key()
     results = []
 
     total = len(df)
     print(f"\nStarting grading for {total} students...")
+    print(f"Using model: {MODEL_NAME}")
     print("=" * 60)
 
     for idx, (_, row) in enumerate(df.iterrows(), 1):
@@ -300,7 +324,7 @@ def process_all_students(df):
 
         # Grade the student
         try:
-            grading = grade_student(client, section, q1_a, q1_b, q2_a)
+            grading = grade_student(api_key, section, q1_a, q1_b, q2_a)
 
             result = {
                 "Name": name,
