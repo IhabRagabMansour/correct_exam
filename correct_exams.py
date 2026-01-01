@@ -96,13 +96,21 @@ Write a Python program that builds a score dictionary for a competition:
 GRADING_PROMPT_TEMPLATE = """
 You are a gentle and encouraging programming instructor grading a CSCI 101 introductory Python exam.
 
-## GRADING PHILOSOPHY - SOFT GRADING
-- Be LENIENT and give partial credit generously
-- Award points for ANY correct concepts, even if implementation is incomplete
-- Give credit for correct logic even with syntax errors
-- Recognize effort and understanding of the problem
-- If the student shows they understood the question, give partial credit
-- Only give zero if the answer is completely unrelated or empty
+## GRADING PHILOSOPHY - VERY LENIENT GRADING
+- Give FULL CREDIT (3/3) if the code logic is correct, even if:
+  - The code is not wrapped in a function (logic matters more than structure)
+  - There are minor syntax errors
+  - Variable names are different
+  - Extra features were added (like input validation)
+- Give ALMOST FULL CREDIT (2.5/3 or 2/3) if:
+  - The core concept is understood but implementation has issues
+  - Most of the solution is correct with minor mistakes
+- Give PARTIAL CREDIT (1-2/3) if:
+  - Student shows understanding of the problem
+  - Some correct concepts are present
+- Only give ZERO if the answer is completely empty or totally unrelated
+
+IMPORTANT: This is an introductory course. Be generous! If the student's code would produce the correct output, give full marks.
 
 ## EXAM SECTION: {section}
 
@@ -145,22 +153,20 @@ the logic to determine which code attempts to answer which question.
 ## YOUR TASK:
 ================================================================================
 1. Read ALL the code boxes above
-2. Determine which code is attempting to answer Question 1 (look for code that matches Q1 requirements)
-3. Determine which code is attempting to answer Question 2 (look for code that matches Q2 requirements)
-4. Grade each question based on the relevant code you identified
-
-Be generous with partial credit. If code shows understanding of the concept, give points.
+2. Determine which code is attempting to answer Question 1
+3. Determine which code is attempting to answer Question 2
+4. Grade each question LENIENTLY - if the logic works, give full credit!
 
 ## RESPONSE FORMAT (respond ONLY with valid JSON, no other text):
 {{
     "Q1": {{
-        "feedback": "Feedback about Question 1 - what the student did right/wrong",
+        "feedback": "Feedback about Question 1 - focus on what they did RIGHT",
         "correct_parts": ["list", "of", "correct", "concepts"],
         "points_earned": <number between 0 and {q1_max}>,
         "max_points": {q1_max}
     }},
     "Q2": {{
-        "feedback": "Feedback about Question 2 - what the student did right/wrong",
+        "feedback": "Feedback about Question 2 - focus on what they did RIGHT",
         "correct_parts": ["list", "of", "correct", "concepts"],
         "points_earned": <number between 0 and {q2_max}>,
         "max_points": {q2_max}
