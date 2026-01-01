@@ -37,35 +37,9 @@ POINTS = {
 EXAM_QUESTIONS = {
     "WNL8": {
         "Q1": """
-Question 1 (3 points) - Count_digits Function:
-
-Part a) Write a function called Count_digits(string) that takes a string as input and
-returns the number of digits in the string.
-- The function must NOT read input from the user
-- The function must NOT print anything
-- The function must return an integer (the count of digits)
-
-Part b) Write a script that:
-- Asks the user to enter a sentence
-- Calls Count_digits() with the user's input
-- Prints the number of digits found in the sentence
-""",
-        "Q2": """
-Question 2 (3 points) - Score Dictionary:
-
-Write a Python program that:
-1. Prompts the user to enter a comma-separated list of participant names
-2. Prompts the user to enter a comma-separated list of their scores
-3. Builds a dictionary with names as keys and scores as values
-4. Prints the resulting dictionary
-5. Determines and prints the top scorer with their score
-""",
-    },
-    "WNL10": {
-        "Q1": """
 Question 1 (3 points) - drawTriangle Function:
 
-Part a) Write a function called drawTriangle(n) that takes an integer n and prints
+Write a Python function drawTriangle(n) that takes an integer n and prints
 a triangle pattern of stars. For example, if n=5:
 *****
 ****
@@ -75,24 +49,42 @@ a triangle pattern of stars. For example, if n=5:
 
 The function only prints the pattern (no return value).
 Assume n is always a positive integer.
-
-Part b) Write a script that:
-- Asks the user to enter a number
-- Calls drawTriangle() with the user's input
-- Displays the triangle pattern
 """,
         "Q2": """
 Question 2 (3 points) - commonElements Function:
 
-Part a) Write a function called commonElements(list1, list2) that:
-- Takes two lists as input
-- Returns a list of distinct elements that appear in BOTH lists
-- Returns an empty list if no common elements exist
+Part a) Write a Python function commonElements(list1, list2) that takes two lists
+and returns a new list containing the distinct elements that appear in both
+lists. If there are no common elements, the function should return an empty list.
 
-Part b) Write a script that:
-- Prompts user to enter two lists (space-separated values)
-- Calls commonElements() with both lists
-- Prints the common elements or an appropriate message if empty
+Part b) Write a Python script that prompts the user to enter two lists of numbers
+(elements separated by spaces). The script should use the commonElements function
+to get the list of common elements and then print the result. If the returned
+list is empty, print an appropriate message instead.
+""",
+    },
+    "WNL10": {
+        "Q1": """
+Question 1 (3 points) - Count_digits Function:
+
+Part a) Write a Python function named Count_digits that takes a string as input and
+returns the number of digits in the string.
+- The function must NOT read input from the user
+- The function must NOT print anything
+- The function must return an integer (the count of digits)
+
+Part b) Write a script that asks the user to enter a sentence, calls Count_digits,
+and prints the number of digits in the sentence.
+""",
+        "Q2": """
+Question 2 (3 points) - Score Dictionary:
+
+Write a Python program that builds a score dictionary for a competition:
+1. Prompt the user to enter a list of participant names, separated by commas
+2. Prompt the user to enter a list of scores (comma-separated) for each participant
+3. Store the names and scores in a dictionary where each name is a key and the corresponding score is the value
+4. Print the resulting dictionary
+5. Determine the participant with the highest score and print their name and score
 """,
     },
 }
