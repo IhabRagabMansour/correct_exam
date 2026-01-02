@@ -16,7 +16,7 @@ from datetime import datetime
 
 EXCEL_FILE = "CSCI 101 Lab Exam Submission Form (Responses).xlsx"
 OUTPUT_FILE = "exam_results.xlsx"
-SECTIONS_TO_GRADE = ["WNL8", "WNL10"]
+SECTIONS_TO_GRADE = ["WNL8", "WNL10", "LALG"]
 
 # Point distribution
 POINTS = {
@@ -25,6 +25,10 @@ POINTS = {
         "Q2": {"total": 3, "parts": {"a": 2, "b": 1}},
     },
     "WNL10": {
+        "Q1": {"total": 3, "parts": {"a": 2, "b": 1}},
+        "Q2": {"total": 3, "parts": {"full": 3}},  # Q2 is graded as whole
+    },
+    "LALG": {
         "Q1": {"total": 3, "parts": {"a": 2, "b": 1}},
         "Q2": {"total": 3, "parts": {"full": 3}},  # Q2 is graded as whole
     },
@@ -85,6 +89,39 @@ Write a Python program that builds a score dictionary for a competition:
 3. Store the names and scores in a dictionary where each name is a key and the corresponding score is the value
 4. Print the resulting dictionary
 5. Determine the participant with the highest score and print their name and score
+""",
+    },
+    "LALG": {
+        "Q1": """
+Question 1 (3 points) - Count_digits Function:
+
+Part a) Write a Python function named Count_digits that takes a string as a parameter
+and returns the number of digits in the string.
+- The function must NOT read input from the user
+- The function must NOT print anything
+
+Part b) Write a script that asks the user to enter a sentence, then calls Count_digits
+and prints the number of digits in the sentence.
+""",
+        "Q2": """
+Question 2 (3 points) - Student Grades Dictionary:
+
+Write a Python program that gets student course marks from the user and stores them
+in a dictionary, then displays:
+- Total student marks
+- Student percentage based on a total of 120
+- Student grade based on these rules:
+  A: 90 to 100
+  B: 80 to 89
+  C: 70 to 79
+  D: 60 to 69
+  F: less than 60
+
+The courses are: Programming, Database, Networks, Math
+
+Notes:
+- Input mark cannot be negative
+- If the user enters a negative value, display an error message and ask again
 """,
     },
 }
@@ -229,7 +266,9 @@ def grade_student(api_key, section, q1_a, q1_b, q2_a):
     # Build point info string
     if section == "WNL8":
         point_info = "Q1: 3 points (graded as whole)\nQ2: 3 points (part a: 2 points, part b: 1 point)"
-    else:  # WNL10
+    elif section == "WNL10":
+        point_info = "Q1: 3 points (part a: 2 points, part b: 1 point)\nQ2: 3 points (graded as whole)"
+    elif section == "LALG":
         point_info = "Q1: 3 points (part a: 2 points, part b: 1 point)\nQ2: 3 points (graded as whole)"
 
     prompt = GRADING_PROMPT_TEMPLATE.format(
